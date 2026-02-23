@@ -1,10 +1,11 @@
 #include<bits/stdc++.h>
+#define int long long
 using namespace std;
 
 const int N = 1e6 + 9, mod = 1e9 + 7;
 
-int f[N], inv[N], finv[N];
-void prec() {
+/*int finv[N];
+void prec() { //linear inverse trick 
   f[0] = 1;
   for (int i = 1; i < N; i++) f[i] = 1LL * i * f[i - 1] % mod;
   inv[1] = 1;
@@ -14,13 +15,9 @@ void prec() {
   }
   finv[0] = 1;
   for (int i = 1; i < N; i++) finv[i] = 1LL * inv[i] * finv[i - 1] % mod;
-}
-int ncr(int n, int r) {
-  if (n < r || n < 0 || r < 0) return 0;
-  return 1LL * f[n] * finv[n - r] % mod * finv[r] % mod;
-}
+}*/
 
-// void brute() {
+// void brute() { //brute force pascal triangle
 //  for (int i = 0; i < N; i++) {
 //    C[i][0] = 1;
 //  }
@@ -31,6 +28,26 @@ int ncr(int n, int r) {
 //  }
 // }
 
+int f[N], inv[N];
+int pw(int a, int b){
+  int res = 1;
+  while(b){
+    if(b&1) res = res * a % mod;
+    a = a * a % mod;
+    b >>= 1;
+  }
+  return res; 
+}
+void prec(){
+  f[0] = 1;
+  for(int i = 1; i < N; i++) f[i] = i * f[i-1] % mod;
+  inv[N-1] = pw(f[N-1], mod-2);
+  for(int i = N-2; i >= 0; i--) inv[i] = inv[i+1] * (i+1) % mod;
+}
+int ncr(int n, int r) {
+  if (n < r || n < 0 || r < 0) return 0;
+  return f[n] * inv[n - r] % mod * inv[r] % mod;
+}
 int32_t main() {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
